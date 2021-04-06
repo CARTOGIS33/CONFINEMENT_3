@@ -38,10 +38,11 @@
         <script src="data/POS_FAMILLE_2.js"></script>
         <script src="data/Rayon_10Kms_3.js"></script>
         <script src="data/Rayon_30Kms_4.js"></script>
+        <script src="data/limite_administrative_5.js"></script>
         <script>
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
-        }).fitBounds([[43.19214063413779,2.992162249387037],[44.47222867555681,6.0041482312033665]]);
+        }).fitBounds([[42.667899707705644,0.6708866186735921],[45.20903218805677,6.773774373662229]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -216,7 +217,7 @@
                 lineJoin: 'miter',
                 weight: 2.0, 
                 fill: true,
-                fillOpacity: 1,
+                fillOpacity: 0.5,
                 fillColor: 'rgba(62,208,45,1.0)',
                 interactive: false,
             }
@@ -260,7 +261,7 @@
                 lineJoin: 'miter',
                 weight: 2.0, 
                 fill: true,
-                fillOpacity: 0.5,
+                fillOpacity: 0.3,
                 fillColor: 'rgba(255,127,0,1.0)',
                 interactive: false,
             }
@@ -279,6 +280,91 @@
         });
         bounds_group.addLayer(layer_Rayon_30Kms_4);
         map.addLayer(layer_Rayon_30Kms_4);
+        function pop_limite_administrative_5(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id_rte500'] !== null ? autolinker.link(feature.properties['id_rte500'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['nature'] !== null ? autolinker.link(feature.properties['nature'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_limite_administrative_5_0(feature) {
+            switch(String(feature.properties['nature'])) {
+                case 'Frontière internationale':
+                    return {
+                pane: 'pane_limite_administrative_5',
+                opacity: 1,
+                color: 'rgba(140,140,140,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+                    break;
+                case 'Limite de département':
+                    return {
+                pane: 'pane_limite_administrative_5',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+                    break;
+                case 'Limite de région':
+                    return {
+                pane: 'pane_limite_administrative_5',
+                opacity: 1,
+                color: 'rgba(240,85,8,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_limite_administrative_5',
+                opacity: 1,
+                color: 'rgba(204,164,122,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: false,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_limite_administrative_5');
+        map.getPane('pane_limite_administrative_5').style.zIndex = 405;
+        map.getPane('pane_limite_administrative_5').style['mix-blend-mode'] = 'normal';
+        var layer_limite_administrative_5 = new L.geoJson(json_limite_administrative_5, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_limite_administrative_5',
+            layerName: 'layer_limite_administrative_5',
+            pane: 'pane_limite_administrative_5',
+            onEachFeature: pop_limite_administrative_5,
+            style: style_limite_administrative_5_0,
+        });
+        bounds_group.addLayer(layer_limite_administrative_5);
+        map.addLayer(layer_limite_administrative_5);
         map.on("zoomend", function(e) {
             if (map.getZoom() <= 19 && map.getZoom() >= 13) {
                 map.addLayer(layer_VueSatellite_1);
@@ -302,7 +388,7 @@
         document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
         .title += 'Search for a place';
         var baseMaps = {};
-        L.control.layers(baseMaps,{'<img src="legend/Rayon_30Kms_4.png" /> Rayon_30Kms': layer_Rayon_30Kms_4,'<img src="legend/Rayon_10Kms_3.png" /> Rayon_10Kms': layer_Rayon_10Kms_3,'POS_FAMILLE<br /><table><tr><td style="text-align: center;"><img src="legend/POS_FAMILLE_2_Emeline0.png" /></td><td>Emeline</td></tr><tr><td style="text-align: center;"><img src="legend/POS_FAMILLE_2_Laurence1.png" /></td><td>Laurence</td></tr><tr><td style="text-align: center;"><img src="legend/POS_FAMILLE_2_Manon2.png" /></td><td>Manon</td></tr><tr><td style="text-align: center;"><img src="legend/POS_FAMILLE_2_PapyJJ3.png" /></td><td>Papy_J-J</td></tr></table>': layer_POS_FAMILLE_2,"Vue Satellite": layer_VueSatellite_1,"Google Road": layer_GoogleRoad_0,}).addTo(map);
+        L.control.layers(baseMaps,{'limite_administrative<br /><table><tr><td style="text-align: center;"><img src="legend/limite_administrative_5_Frontièreinternationale0.png" /></td><td>Frontière internationale</td></tr><tr><td style="text-align: center;"><img src="legend/limite_administrative_5_Limitededépartement1.png" /></td><td>Limite de département</td></tr><tr><td style="text-align: center;"><img src="legend/limite_administrative_5_Limitederégion2.png" /></td><td>Limite de région</td></tr><tr><td style="text-align: center;"><img src="legend/limite_administrative_5_3.png" /></td><td></td></tr></table>': layer_limite_administrative_5,'<img src="legend/Rayon_30Kms_4.png" /> Rayon_30Kms': layer_Rayon_30Kms_4,'<img src="legend/Rayon_10Kms_3.png" /> Rayon_10Kms': layer_Rayon_10Kms_3,'POS_FAMILLE<br /><table><tr><td style="text-align: center;"><img src="legend/POS_FAMILLE_2_Emeline0.png" /></td><td>Emeline</td></tr><tr><td style="text-align: center;"><img src="legend/POS_FAMILLE_2_Laurence1.png" /></td><td>Laurence</td></tr><tr><td style="text-align: center;"><img src="legend/POS_FAMILLE_2_Manon2.png" /></td><td>Manon</td></tr><tr><td style="text-align: center;"><img src="legend/POS_FAMILLE_2_PapyJJ3.png" /></td><td>Papy_J-J</td></tr></table>': layer_POS_FAMILLE_2,"Vue Satellite": layer_VueSatellite_1,"Google Road": layer_GoogleRoad_0,}).addTo(map);
         setBounds();
         </script>
     </body>
