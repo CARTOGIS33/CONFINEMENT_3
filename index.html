@@ -420,6 +420,28 @@
         .className += ' fa fa-search';
         document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
         .title += 'Search for a place';
+
+        var title = new L.Control();
+        title.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info');
+            this.update();
+            return this._div;
+        };
+        title.update = function () {
+            this._div.innerHTML = '<h2>CONFINEMENT N°3</h2>';
+        };
+        title.addTo(map);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+            .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+            .title += 'Search for a place';
+
         var baseMaps = {};
         L.control.layers(baseMaps,{'limite_administrative<br /><table><tr><td style="text-align: center;"><img src="legend/limite_administrative_6_Frontièreinternationale0.png" /></td><td>Frontière internationale</td></tr><tr><td style="text-align: center;"><img src="legend/limite_administrative_6_Limitederégion1.png" /></td><td>Limite de région</td></tr></table>': layer_limite_administrative_6,'<img src="legend/Dpartement_5.png" /> Département': layer_Dpartement_5,'<img src="legend/Rayon_30Kms_4.png" /> Rayon_30Kms': layer_Rayon_30Kms_4,'<img src="legend/Rayon_10Kms_3.png" /> Rayon_10Kms': layer_Rayon_10Kms_3,'POS_FAMILLE<br /><table><tr><td style="text-align: center;"><img src="legend/POS_FAMILLE_2_Emeline0.png" /></td><td>Emeline</td></tr><tr><td style="text-align: center;"><img src="legend/POS_FAMILLE_2_Laurence1.png" /></td><td>Laurence</td></tr><tr><td style="text-align: center;"><img src="legend/POS_FAMILLE_2_Manon2.png" /></td><td>Manon</td></tr><tr><td style="text-align: center;"><img src="legend/POS_FAMILLE_2_PapyJJ3.png" /></td><td>Papy_J-J</td></tr></table>': layer_POS_FAMILLE_2,"Vue Satellite": layer_VueSatellite_1,"Google Road": layer_GoogleRoad_0,}).addTo(map);
         setBounds();
@@ -446,6 +468,7 @@
         map.on("layerremove", function(){
             resetLabels([layer_Dpartement_5]);
         });
+        
         </script>
     </body>
 </html>
